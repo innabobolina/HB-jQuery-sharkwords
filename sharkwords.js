@@ -50,7 +50,12 @@ const isLetterInWord = (letter) => {
   // Replace this with your code
   //try to get <div class="letter-box ${letter}"></div>
   //if exists, will be list (return true), else undefined (return false)
-
+  if ($(`div.${letter}`)[0] === undefined){
+    return false;
+  }
+  else{
+    return true;
+  }
 };
 
 
