@@ -10,13 +10,24 @@ let numWrong = 0;
 
 /** Loop over the chars in `word` and create divs. */
 const createDivsForChars = (word) => {
-  // Replace this with your code
+  for (const char of word) {
+    const div = document.createElement('div');
+    div.classList.add('letter-box');
+    div.classList.add(char);
+
+    document.querySelector('#word-container').append(div);
+  }
 };
 
 
 /** Loop over each letter in `ALPHABET` and generate buttons. */
 const generateLetterButtons = () => {
-  // Replace this with your code
+  for (const char of ALPHABET) {
+    const btn = document.createElement('button');
+    btn.innerHTML = char;
+
+    document.querySelector('#letter-buttons').append(btn);
+  }
 };
 
 
@@ -25,19 +36,19 @@ const generateLetterButtons = () => {
  * `buttonEl` is an `HTMLElement` object.
  */
 const disableLetterButton = (buttonEl) => {
-  // Replace this with your code
+  buttonEl.setAttribute('disabled', true);
 };
 
 
 /** Return `true` if `letter` is in the word. */
 const isLetterInWord = (letter) => {
-  // Replace this with your code
+  return document.querySelector(`div.${letter}`) !== undefined;
 };
 
 
 /** Called when `letter` is in word. Update contents of divs with `letter`. */
 const handleCorrectGuess = (letter) => {
-  // Replace this with your code
+  document.querySelector(`div.${letter}`).innerHTML = letter;
 };
 
 
@@ -47,13 +58,43 @@ const handleCorrectGuess = (letter) => {
  * message. Otherwise, increment `numWrong` and update the shark image.
  */
 const handleWrongGuess = () => {
-  // Replace this with your code
+  numWrong += 1;
+
+  document.querySelector('#shark-img img').setAttribute(
+    'src',
+    `images/guess${numWrong}.png`
+  );
+
+  if (numWrong === 5) {
+    const buttons = document.querySelectorAll('buttons');
+
+    for (const btn of buttons) {
+      btn.setAttribute('disabled', true);
+    }
+
+    document.querySelector('#play-again').style.display = '';
+  }
 };
 
 
 /** Reset game state. Called before restarting the game. */
 const resetGame = () => {
-  // Replace this with your code
+  numWrong = 0;
+
+  document.querySelector('#shark-img img').setAttribute(
+    'src',
+    'images/guess0.png'
+  );
+
+  document.querySelector('#play-again').style.display = 'none';
+
+  for (const el of document.querySelector('#word-container').children) {
+    el.remove();
+  }
+
+  for (const el of document.querySelector('#letter-buttons').children) {
+    el.remove();
+  }
 };
 
 
@@ -67,25 +108,27 @@ const resetGame = () => {
   createDivsForChars(word);
   generateLetterButtons();
 
-	Array.from(document.querySelectorAll('button'))
-		.forEach((btn) => {
-			btn.addEventListener('click', (evt) => {
-				const clickedBtn = evt.target;
-				disableLetterButton(clickedBtn);
+  Array.from(document.querySelectorAll('button'))
+    .forEach((btn) => {
+      btn.addEventListener('click', (evt) => {
+        const clickedBtn = evt.target;
+        disableLetterButton(clickedBtn);
 
-				const letter = clickedBtn.innerHTML;
+        const letter = clickedBtn.innerHTML;
 
-				if (isLetterInWord(letter)) {
-					handleCorrectGuess(letter);
-				} else {
-					handleWrongGuess(letter);
-				}
-			});
-		});
+        if (isLetterInWord(letter)) {
+          handleCorrectGuess(letter);
+        } else {
+          handleWrongGuess(letter);
+        }
+      });
+    });
 
-	document.querySelector('#play-again')
-		.addEventListener('click', () => {
-			resetGame();
-			startGame();
-		});
+  document.querySelector('#play-again')
+    .addEventListener('click', () => {
+      resetGame();
+      startGame();
+    });
 })();
+
+
